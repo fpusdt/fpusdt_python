@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      TRC20 API - 企业级TRON区块链接口服务 | Professional TRON Blockchain API
+      Service
+    </title>
+
+    <!-- Favicon and Icons -->
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🚀</text></svg>"
+    />
+    <meta name="theme-color" content="#4158d0" />
+
+    <!-- SEO Meta Tags -->
+    <meta
+      name="description"
+      content="TRC20 API是专业的TRON区块链接口服务，提供钱包管理、余额查询、转账交易等完整功能。基于Python Flask开发，高性能、稳定可靠的企业级API解决方案。Professional TRON blockchain API service with wallet management, balance query, transaction features."
+    />
+    <meta
+      name="keywords"
+      content="TRC20 API, TRON API, 波场API, 区块链接口, TRX转账, USDT-TRC20, 钱包API, 区块链开发, TRON blockchain, cryptocurrency API, digital wallet, blockchain service"
+    />
+    <meta name="author" content="TRC20 API Team" />
+    <meta name="robots" content="index, follow" />
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="http://localhost:5000" />
+    <meta property="og:title" content="TRC20 API - 企业级TRON区块链接口服务" />
+    <meta
+      property="og:description"
+      content="专业的TRON区块链接口服务，提供完整的钱包管理、余额查询、转账交易等功能"
+    />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="http://localhost:5000" />
+    <meta
+      property="twitter:title"
+      content="TRC20 API - Professional TRON Blockchain Service"
+    />
+    <meta
+      property="twitter:description"
+      content="Enterprise-grade TRON blockchain API service with comprehensive wallet and transaction features"
+    />
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB",
+          "Microsoft YaHei", sans-serif;
+        background-color: #f8f9fa;
+        color: #333;
+        line-height: 1.6;
+      }
+
+      .top-banner {
+        background: linear-gradient(
+          135deg,
+          #4158d0 0%,
+          #c850c0 46%,
+          #ffcc70 100%
+        );
+        color: white;
+        text-align: center;
+        padding: 80px 0 120px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .top-banner::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(255,255,255,0.1)"/><circle cx="80" cy="80" r="3" fill="rgba(255,255,255,0.05)"/><circle cx="40" cy="60" r="1" fill="rgba(255,255,255,0.1)"/></svg>');
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+        position: relative;
+        z-index: 1;
+      }
+
+      .hero-title {
+        font-size: 3.2rem;
+        font-weight: 700;
+        margin-bottom: 24px;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+
+      .hero-subtitle {
+        font-size: 1.4rem;
+        margin-bottom: 16px;
+        opacity: 0.95;
+        font-weight: 300;
+      }
+
+      .hero-desc {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        max-width: 800px;
+        margin: 0 auto 40px;
+        line-height: 1.8;
+      }
+
+      .cta-buttons {
+        margin-top: 40px;
+      }
+
+      .btn {
+        display: inline-block;
+        padding: 16px 32px;
+        margin: 8px;
+        border-radius: 6px;
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+      }
+
+      .btn-primary {
+        background: white;
+        color: #4158d0;
+        border-color: white;
+      }
+
+      .btn-primary:hover {
+        background: transparent;
+        color: white;
+        border-color: white;
+      }
+
+      .btn-outline {
+        background: transparent;
+        color: white;
+        border-color: rgba(255, 255, 255, 0.8);
+      }
+
+      .btn-outline:hover {
+        background: white;
+        color: #4158d0;
+      }
+
+      .main-content {
+        background: white;
+        margin-top: -60px;
+        border-radius: 12px;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+        padding: 60px;
+        position: relative;
+        z-index: 2;
+      }
+
+      .section {
+        margin-bottom: 60px;
+      }
+
+      .section-title {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: #1a1a1a;
+        margin-bottom: 16px;
+        text-align: center;
+      }
+
+      .section-subtitle {
+        font-size: 1.1rem;
+        color: #666;
+        text-align: center;
+        margin-bottom: 48px;
+        max-width: 600px;
+        margin-left: auto;
+        margin-right: auto;
+      }
+
+      .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 32px;
+        margin: 60px 0;
+        text-align: center;
+      }
+
+      .stat-item {
+        padding: 24px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 12px;
+        border: 1px solid #dee2e6;
+        transition: all 0.3s ease;
+      }
+
+      .stat-item:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        border-color: #4158d0;
+      }
+
+      .stat-number {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #4158d0;
+        margin-bottom: 8px;
+        background: linear-gradient(135deg, #4158d0 0%, #c850c0 100%);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .stat-label {
+        font-size: 0.95rem;
+        color: #666;
+        font-weight: 500;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 32px;
+        margin: 48px 0;
+      }
+
+      .feature-card {
+        text-align: center;
+        padding: 40px 24px;
+        background: #fff;
+        border: 1px solid #e9ecef;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        position: relative;
+      }
+
+      .feature-card:hover {
+        border-color: #4158d0;
+        transform: translateY(-4px);
+        box-shadow: 0 8px 32px rgba(65, 88, 208, 0.12);
+      }
+
+      .feature-icon {
+        width: 64px;
+        height: 64px;
+        margin: 0 auto 24px;
+        background: linear-gradient(135deg, #4158d0 0%, #c850c0 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 28px;
+        color: white;
+      }
+
+      .feature-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        margin-bottom: 12px;
+        color: #1a1a1a;
+      }
+
+      .feature-desc {
+        color: #666;
+        line-height: 1.6;
+        font-size: 0.95rem;
+      }
+
+      .companies-section {
+        background: #f8f9fa;
+        padding: 80px 0;
+        margin-top: 80px;
+      }
+
+      .companies-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 40px;
+        align-items: center;
+        text-align: center;
+      }
+
+      .company-logo {
+        padding: 20px;
+        background: white;
+        border-radius: 8px;
+        font-weight: 600;
+        color: #666;
+        font-size: 1.1rem;
+        border: 1px solid #e9ecef;
+        transition: all 0.3s ease;
+      }
+
+      .company-logo:hover {
+        border-color: #4158d0;
+        color: #4158d0;
+      }
+
+      .contact-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 60px 40px;
+        border-radius: 12px;
+        text-align: center;
+        margin: 60px 0;
+      }
+
+      .contact-title {
+        font-size: 1.8rem;
+        font-weight: 600;
+        margin-bottom: 16px;
+      }
+
+      .contact-desc {
+        font-size: 1.1rem;
+        opacity: 0.95;
+        margin-bottom: 24px;
+      }
+
+      .contact-links {
+        display: flex;
+        justify-content: center;
+        gap: 24px;
+        flex-wrap: wrap;
+      }
+
+      .contact-link {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+        padding: 8px 16px;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        border-radius: 6px;
+        transition: all 0.3s ease;
+      }
+
+      .contact-link:hover {
+        background: rgba(255, 255, 255, 0.1);
+        border-color: white;
+      }
+
+      .footer {
+        background: #1a1a1a;
+        color: #ccc;
+        padding: 40px 0;
+        text-align: center;
+      }
+
+      .footer-content {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 0 20px;
+      }
+
+      .footer-desc {
+        margin-bottom: 20px;
+        line-height: 1.6;
+      }
+
+      .footer-links {
+        display: flex;
+        justify-content: center;
+        gap: 24px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+      }
+
+      .footer-link {
+        color: #ccc;
+        text-decoration: none;
+        transition: color 0.3s ease;
+      }
+
+      .footer-link:hover {
+        color: white;
+      }
+
+      .footer-bottom {
+        font-size: 0.9rem;
+        opacity: 0.7;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #333;
+      }
+
+      /* 响应式设计 */
+      @media (max-width: 768px) {
+        .hero-title {
+          font-size: 2.2rem;
+        }
+
+        .hero-subtitle {
+          font-size: 1.2rem;
+        }
+
+        .main-content {
+          margin-top: -40px;
+          padding: 40px 30px;
+        }
+
+        .section-title {
+          font-size: 1.8rem;
+        }
+
+        .features-grid {
+          grid-template-columns: 1fr;
+          gap: 24px;
+        }
+
+        .stats-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 16px;
+        }
+
+        .companies-grid {
+          grid-template-columns: repeat(2, 1fr);
+          gap: 20px;
+        }
+
+        .contact-links {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .footer-links {
+          flex-direction: column;
+          gap: 12px;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .top-banner {
+          padding: 60px 0 80px;
+        }
+
+        .hero-title {
+          font-size: 1.8rem;
+        }
+
+        .hero-subtitle {
+          font-size: 1rem;
+        }
+
+        .stats-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .companies-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* 页面加载动画 */
+      .animate-fadeInUp {
+        animation: fadeInUp 0.8s ease-out;
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="top-banner">
+      <div class="container">
+        <h1 class="hero-title animate-fadeInUp">🚀 TRC20 API 3.0</h1>
+        <p class="hero-subtitle animate-fadeInUp">
+          企业级TRON区块链接口服务 - Python版本
+        </p>
+        <p class="hero-desc animate-fadeInUp">
+          TRC20 API 3.0 -
+          Python版本，基于Flask轻量级框架构建，展现Python简洁优雅的代码风格。专为TRON网络设计的智能区块链接口服务，具备丰富的数据处理库、强大的AI/ML生态支持。提供完整的钱包管理、余额查询、交易处理功能，是数据分析、机器学习和快速原型开发的最佳选择。
+        </p>
+        <div class="cta-buttons">
+          <a href="/doc" class="btn btn-primary">查看API文档</a>
+          <a href="/v1/status" class="btn btn-outline" onclick="testAPI(event)"
+            >测试API状态</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="main-content">
+        <!-- 多语言版本介绍 -->
+        <div class="section">
+          <h2 class="section-title">多语言版本支持</h2>
+          <div class="section-subtitle">
+            一套API，四种语言实现，满足不同技术栈的开发需求
+          </div>
+
+          <div
+            style="
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+              color: white;
+              padding: 40px;
+              border-radius: 12px;
+              margin-bottom: 40px;
+              text-align: center;
+            "
+          >
+            <h3
+              style="font-size: 1.8rem; margin-bottom: 20px; font-weight: 600"
+            >
+              企业级多语言解决方案
+            </h3>
+            <p
+              style="
+                font-size: 1.2rem;
+                opacity: 0.9;
+                max-width: 800px;
+                margin: 0 auto;
+              "
+            >
+              无论您的团队使用什么技术栈，我们都为您准备了最适合的解决方案。每个版本都经过精心优化，确保在对应语言生态中发挥最佳性能。
+            </p>
+          </div>
+
+          <div class="features-grid">
+            <div
+              class="feature-card"
+              style="
+                border: 3px solid #777bb4;
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+              "
+            >
+              <div
+                class="feature-icon"
+                style="
+                  background: linear-gradient(135deg, #777bb4, #4f5b93);
+                  width: 64px;
+                  height: 64px;
+                  border-radius: 12px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  margin: 0 auto 24px;
+                "
+              >
+                <span style="color: white; font-weight: bold; font-size: 1.2rem"
+                  >PHP</span
+                >
+              </div>
+              <div class="feature-title" style="color: #777bb4">PHP 版本</div>
+              <div class="feature-desc">
+                <strong>ThinkPHP 5.0 框架</strong><br />
+                • 成熟稳定的Web开发语言<br />
+                • 完整的MVC架构设计<br />
+                • 丰富的区块链扩展库<br />
+                • 部署简单，运维成本低<br />
+                <div
+                  style="
+                    margin-top: 15px;
+                    padding: 8px;
+                    background: #e3f2fd;
+                    border-radius: 6px;
+                    color: #1976d2;
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                  "
+                >
+                  ⭐ 推荐指数: ⭐⭐⭐⭐⭐
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="feature-card"
+              style="
+                border: 3px solid #00add8;
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+              "
+            >
+              <div
+                class="feature-icon"
+                style="
+                  background: linear-gradient(135deg, #00add8, #007d9c);
+                  width: 64px;
+                  height: 64px;
+                  border-radius: 12px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  margin: 0 auto 24px;
+                "
+              >
+                <span style="color: white; font-weight: bold; font-size: 1.1rem"
+                  >Go</span
+                >
+              </div>
+              <div class="feature-title" style="color: #00add8">
+                Golang 版本
+              </div>
+              <div class="feature-desc">
+                <strong>高性能云原生架构</strong><br />
+                • 极致的并发处理性能<br />
+                • 内存占用低，运行效率高<br />
+                • 原生支持Docker容器化<br />
+                • 适合高并发场景部署<br />
+                <div
+                  style="
+                    margin-top: 15px;
+                    padding: 8px;
+                    background: #e8f5e8;
+                    border-radius: 6px;
+                    color: #2e7d32;
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                  "
+                >
+                  ⚡ 性能之王: ⚡⚡⚡⚡⚡
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="feature-card"
+              style="
+                border: 4px solid #3776ab;
+                background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+                box-shadow: 0 8px 32px rgba(55, 118, 171, 0.2);
+              "
+            >
+              <div
+                class="feature-icon"
+                style="
+                  background: linear-gradient(135deg, #3776ab, #ffd343);
+                  width: 64px;
+                  height: 64px;
+                  border-radius: 12px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  margin: 0 auto 24px;
+                  box-shadow: 0 4px 15px rgba(55, 118, 171, 0.3);
+                "
+              >
+                <span style="color: white; font-size: 1.5rem">🐍</span>
+              </div>
+              <div
+                class="feature-title"
+                style="color: #3776ab; font-size: 1.5rem"
+              >
+                ⭐ Python 版本 (当前)
+              </div>
+              <div class="feature-desc">
+                <strong>Flask 轻量级框架</strong><br />
+                • 简洁优雅的代码风格<br />
+                • 丰富的数据处理库<br />
+                • 强大的机器学习生态<br />
+                • 快速原型开发首选<br />
+                <div
+                  style="
+                    margin-top: 15px;
+                    padding: 10px;
+                    background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+                    border-radius: 6px;
+                    color: #e65100;
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                    border: 2px solid #ff9800;
+                  "
+                >
+                  🚀 开发效率: 🚀🚀🚀🚀🚀
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="feature-card"
+              style="
+                border: 3px solid #68a063;
+                background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+              "
+            >
+              <div
+                class="feature-icon"
+                style="
+                  background: linear-gradient(135deg, #68a063, #8cc84b);
+                  width: 64px;
+                  height: 64px;
+                  border-radius: 12px;
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                  margin: 0 auto 24px;
+                "
+              >
+                <span style="color: white; font-weight: bold; font-size: 1.1rem"
+                  >JS</span
+                >
+              </div>
+              <div class="feature-title" style="color: #68a063">
+                Node.js 版本
+              </div>
+              <div class="feature-desc">
+                <strong>Express.js 全栈框架</strong><br />
+                • 前后端统一JavaScript语言<br />
+                • 异步非阻塞I/O模型<br />
+                • 庞大的npm生态系统<br />
+                • 实时应用开发利器<br />
+                <div
+                  style="
+                    margin-top: 15px;
+                    padding: 8px;
+                    background: #e8f5e8;
+                    border-radius: 6px;
+                    color: #388e3c;
+                    font-weight: 600;
+                    font-size: 0.9rem;
+                  "
+                >
+                  💻 全栈首选: 💻💻💻💻💻
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div
+            style="
+              background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+              color: white;
+              padding: 30px;
+              border-radius: 12px;
+              text-align: center;
+              margin: 40px 0;
+            "
+          >
+            <h3
+              style="font-size: 1.6rem; margin-bottom: 15px; font-weight: 600"
+            >
+              🎉 一次购买，四种语言，无限可能！
+            </h3>
+            <p
+              style="
+                font-size: 1.1rem;
+                opacity: 0.9;
+                max-width: 700px;
+                margin: 0 auto;
+              "
+            >
+              无论您的团队使用什么技术栈，我们都为您准备了最适合的解决方案。每个版本都经过精心优化，确保在对应语言生态中发挥最佳性能。
+            </p>
+          </div>
+        </div>
+
+        <!-- 数据统计 -->
+        <div class="section">
+          <h2 class="section-title">服务数据</h2>
+          <p class="section-subtitle">
+            稳定可靠的企业级API服务，为您的项目提供强力支撑
+          </p>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <div class="stat-number">15+</div>
+              <div class="stat-label">API接口</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">99.9%</div>
+              <div class="stat-label">服务可用性</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">&lt;100ms</div>
+              <div class="stat-label">响应时间</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-number">24/7</div>
+              <div class="stat-label">技术支持</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 核心功能 -->
+        <div class="section">
+          <h2 class="section-title">核心功能</h2>
+          <p class="section-subtitle">
+            涵盖TRON生态系统的完整功能，满足您的各种开发需求
+          </p>
+          <div class="features-grid">
+            <div class="feature-card">
+              <div class="feature-icon">💳</div>
+              <h3 class="feature-title">钱包管理</h3>
+              <p class="feature-desc">
+                支持生成TRON地址、助记词钱包、私钥导入等完整钱包管理功能
+              </p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">💰</div>
+              <h3 class="feature-title">余额查询</h3>
+              <p class="feature-desc">
+                实时查询TRX、TRC20(USDT)、TRC10代币余额，数据准确可靠
+              </p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">💸</div>
+              <h3 class="feature-title">转账交易</h3>
+              <p class="feature-desc">
+                支持各种代币转账，包括备注功能，安全快速的交易处理
+              </p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">📊</div>
+              <h3 class="feature-title">交易查询</h3>
+              <p class="feature-desc">
+                查询交易详情、交易回执、交易状态等完整交易信息
+              </p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">⛓️</div>
+              <h3 class="feature-title">区块链查询</h3>
+              <p class="feature-desc">
+                获取区块高度、区块信息、网络状态等区块链基础数据
+              </p>
+            </div>
+            <div class="feature-card">
+              <div class="feature-icon">🔧</div>
+              <h3 class="feature-title">开发工具</h3>
+              <p class="feature-desc">
+                API状态检查、接口列表、在线测试等丰富的开发工具
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 信任的企业 -->
+    <div class="companies-section">
+      <div class="container">
+        <h2 class="section-title" style="color: #1a1a1a">信任的合作伙伴</h2>
+        <p class="section-subtitle" style="color: #666">
+          众多企业选择我们的API服务
+        </p>
+        <div class="companies-grid">
+          <div class="company-logo">区块链公司A</div>
+          <div class="company-logo">数字钱包B</div>
+          <div class="company-logo">交易所C</div>
+          <div class="company-logo">DeFi项目D</div>
+          <div class="company-logo">游戏平台E</div>
+          <div class="company-logo">金融科技F</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 联系我们 -->
+    <div class="container">
+      <div class="contact-section">
+        <h2 class="contact-title">需要技术支持？</h2>
+        <p class="contact-desc">我们提供专业的技术支持和定制开发服务</p>
+        <div class="contact-links">
+          <a href="https://t.me/king_orz" target="_blank" class="contact-link"
+            >📱 Telegram</a
+          >
+          <a href="https://www.919968.xyz/" target="_blank" class="contact-link"
+            >🌐 官方网站</a
+          >
+        </div>
+      </div>
+    </div>
+
+    <!-- 页脚 -->
+    <div class="footer">
+      <div class="footer-content">
+        <p class="footer-desc">
+          TRC20
+          API是专业的TRON区块链接口服务提供商，致力于为开发者和企业提供稳定、高效、安全的区块链API解决方案。
+        </p>
+        <div class="footer-links">
+          <a href="/doc" class="footer-link">API文档</a>
+          <a href="/v1/status" class="footer-link">服务状态</a>
+          <a href="https://t.me/king_orz" target="_blank" class="footer-link"
+            >技术支持</a
+          >
+        </div>
+        <div class="footer-bottom">
+          <p>
+            © 2025 TRC20 API. 保留所有权利. | 温馨提示：接受各种代码定制服务
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // 页面加载动画
+      document.addEventListener("DOMContentLoaded", function () {
+        const elements = document.querySelectorAll(".animate-fadeInUp");
+        elements.forEach((el, index) => {
+          el.style.animationDelay = `${index * 0.2}s`;
+        });
+      });
+
+      // 测试API状态
+      async function testAPI(event) {
+        event.preventDefault();
+
+        try {
+          const response = await fetch("/v1/status");
+          const data = await response.json();
+
+          if (data.code === 1) {
+            alert(
+              `✅ API服务运行正常！\n\n📊 服务信息：\n版本：${data.data.version}\nPython版本：${data.data.python_version}\n时间：${data.data.date}`
+            );
+          } else {
+            alert("❌ API服务异常，请稍后重试");
+          }
+        } catch (error) {
+          alert("❌ 网络连接错误：" + error.message);
+        }
+      }
+
+      // 平滑滚动
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }
+        });
+      });
+
+      // 统计数字动画
+      function animateValue(element, start, end, duration) {
+        let startTimestamp = null;
+        const step = (timestamp) => {
+          if (!startTimestamp) startTimestamp = timestamp;
+          const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+          element.innerHTML = Math.floor(progress * (end - start) + start);
+          if (progress < 1) {
+            window.requestAnimationFrame(step);
+          }
+        };
+        window.requestAnimationFrame(step);
+      }
+
+      // 当统计区域进入视窗时开始动画
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const statNumbers = entry.target.querySelectorAll(".stat-number");
+            statNumbers.forEach((stat) => {
+              const text = stat.textContent;
+              if (text.includes("+")) {
+                const num = parseInt(text);
+                animateValue(stat, 0, num, 2000);
+                stat.innerHTML += "+";
+              }
+            });
+            observer.unobserve(entry.target);
+          }
+        });
+      });
+
+      const statsSection = document.querySelector(".stats-grid");
+      if (statsSection) {
+        observer.observe(statsSection);
+      }
+    </script>
+  </body>
+</html>

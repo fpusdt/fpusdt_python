@@ -1,0 +1,1551 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TRC20 API 3.0 - 完整接口文档</title>
+
+    <!-- Favicon -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📚</text></svg>">
+    <meta name="theme-color" content="#3498db">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+            background-color: #f8f9fa;
+            color: #2c3e50;
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* 侧边栏样式 */
+        .sidebar {
+            background: #fff;
+            border-right: 1px solid #e9ecef;
+            overflow-y: auto;
+            flex-shrink: 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            min-width: 280px;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            background: #fff;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .logo-icon {
+            margin-right: 10px;
+            font-size: 1.8rem;
+        }
+
+        .sidebar-nav {
+            padding: 20px 0;
+        }
+
+        .nav-group {
+            margin-bottom: 30px;
+        }
+
+        .nav-group-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+            padding: 0 20px;
+        }
+
+        .nav-item {
+            display: block;
+            padding: 8px 20px;
+            color: #495057;
+            text-decoration: none;
+            font-size: 0.9rem;
+            border-left: 3px solid transparent;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            background-color: #f8f9fa;
+            color: #007bff;
+            border-left-color: #007bff;
+        }
+
+        .nav-item.active {
+            background-color: #e3f2fd;
+            color: #007bff;
+            border-left-color: #007bff;
+            font-weight: 500;
+        }
+
+        .nav-item-icon {
+            margin-right: 8px;
+            font-size: 0.9rem;
+        }
+
+        .nav-item-badge {
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+            background: #e9ecef;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .nav-item-badge.get {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .nav-item-badge.post {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        /* 主内容区域 */
+        .main-content {
+            flex: 1;
+            background: #fff;
+            overflow-x: hidden;
+        }
+
+        .content-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 60px 40px;
+            text-align: center;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .page-subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content-body {
+            padding: 40px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        /* 公告样式 */
+        .notice-section {
+            background: linear-gradient(45deg, #ff6b6b, #feca57);
+            color: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+
+        .notice-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        /* 内容区块样式 */
+        .section {
+            margin-bottom: 40px;
+            scroll-margin-top: 80px;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .api-item {
+            background: #fff;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .api-header {
+            padding: 20px;
+            border-bottom: 1px solid #e9ecef;
+            background: #f8f9fa;
+        }
+
+        .api-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+        }
+
+        .api-method {
+            background: #28a745;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            margin-right: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .api-method.POST {
+            background: #ffc107;
+            color: #212529;
+        }
+
+        .api-method.GET {
+            background: #28a745;
+            color: white;
+        }
+
+        .api-url {
+            background: #f1f3f4;
+            padding: 12px;
+            border-radius: 4px;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            font-size: 0.875rem;
+            color: #495057;
+            word-break: break-all;
+            border: 1px solid #e9ecef;
+        }
+
+        .api-description {
+            color: #6c757d;
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .api-content {
+            padding: 20px;
+        }
+
+        .params-section {
+            margin-bottom: 20px;
+        }
+
+        .params-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 12px;
+        }
+
+        .params-table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            overflow: hidden;
+            font-size: 0.875rem;
+        }
+
+        .params-table th {
+            background: #f8f9fa;
+            color: #495057;
+            padding: 12px;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .params-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: top;
+        }
+
+        .params-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .params-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .example-section {
+            background: #f8f9fa;
+            border-radius: 6px;
+            padding: 16px;
+            margin-top: 20px;
+        }
+
+        .example-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 12px;
+        }
+
+        .code-block {
+            background: #2d3748;
+            color: #e2e8f0;
+            padding: 16px;
+            border-radius: 6px;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, Courier, monospace;
+            font-size: 0.8rem;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            line-height: 1.4;
+        }
+
+        .test-button {
+            background: #007bff;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .test-button:hover {
+            background: #0056b3;
+            text-decoration: none;
+            color: white;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 16px;
+            border-radius: 6px;
+            margin: 16px 0;
+            font-size: 0.875rem;
+        }
+
+        .success-box {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            padding: 16px;
+            border-radius: 6px;
+            margin: 16px 0;
+            font-size: 0.875rem;
+        }
+
+        .error-box {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            padding: 16px;
+            border-radius: 6px;
+            margin: 16px 0;
+            font-size: 0.875rem;
+        }
+
+        /* 响应式设计 */
+        /* 移动端顶部导航栏 */
+        .mobile-header {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 60px;
+            background: #fff;
+            border-bottom: 1px solid #e5e5e5;
+            z-index: 1003;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .mobile-nav-left,
+        .mobile-nav-center,
+        .mobile-nav-right {
+            position: absolute;
+            top: 0;
+            height: 60px;
+            display: flex;
+            align-items: center;
+        }
+
+        .mobile-nav-left {
+            left: 0;
+            padding-left: 16px;
+        }
+
+        .mobile-nav-center {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .mobile-nav-right {
+            right: 0;
+            padding-right: 16px;
+        }
+
+        .mobile-toggle {
+            display: none;
+            background: transparent;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background-color 0.2s ease;
+        }
+
+        .mobile-toggle:hover {
+            background: rgba(0,0,0,0.05);
+        }
+
+        .mobile-toggle .menu-icon {
+            font-size: 18px;
+            color: #333;
+            display: block;
+        }
+
+        .mobile-logo {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #333;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        .mobile-logo .logo-icon {
+            margin-right: 8px;
+            font-size: 1.3rem;
+        }
+
+        .search-btn {
+            background: transparent;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+            color: #666;
+            transition: background-color 0.2s ease;
+        }
+
+        .search-btn:hover {
+            background: rgba(0,0,0,0.05);
+        }
+
+        /* 移动端样式 */
+        @media (max-width: 1024px) {
+            .mobile-header {
+                display: flex;
+            }
+
+            .mobile-toggle {
+                display: block;
+            }
+
+            .layout {
+                flex-direction: column;
+                padding-top: 60px;
+            }
+
+            .sidebar {
+                position: fixed;
+                top: 60px;
+                left: -280px;
+                width: 280px;
+                height: calc(100vh - 60px);
+                background: #fff;
+                z-index: 1001;
+                transition: left 0.3s ease;
+                overflow-y: auto;
+                border-right: none;
+                box-shadow: 4px 0 8px rgba(0,0,0,0.1);
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .overlay {
+                position: fixed;
+                top: 60px;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0,0,0,0.5);
+                z-index: 1000;
+                opacity: 0;
+                visibility: hidden;
+                transition: all 0.3s ease;
+            }
+
+            .overlay.show {
+                opacity: 1;
+                visibility: visible;
+            }
+
+            .main-content {
+                width: 100%;
+            }
+
+            .content-header {
+                padding: 40px 20px;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .content-body {
+                padding: 20px;
+            }
+
+            .api-header {
+                padding: 16px;
+            }
+
+            .api-content {
+                padding: 16px;
+            }
+
+            .api-title {
+                font-size: 1.1rem;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .api-method {
+                margin-bottom: 8px;
+                margin-right: 0;
+            }
+        }
+
+        /* 悬浮客服 */
+        .floating-service {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        .floating-service:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .floating-service a {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            color: white;
+            text-decoration: none;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .floating-service .icon {
+            font-size: 1.5rem;
+        }
+
+        .floating-service .text {
+            position: absolute;
+            right: 70px;
+            white-space: nowrap;
+            background: #333;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .floating-service:hover .text {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .floating-service .text::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            transform: translateY(-50%);
+            border: 5px solid transparent;
+            border-left-color: #333;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 悬浮客服 -->
+    <div class="floating-service">
+        <a href="https://t.me/king_orz" target="_blank">
+            <span class="icon">✈️</span>
+            <span class="text">联系客服</span>
+        </a>
+    </div>
+
+    <!-- 移动端顶部导航栏 -->
+    <div class="mobile-header">
+        <div class="mobile-nav-left">
+            <button class="mobile-toggle" onclick="toggleMobileSidebar()" id="mobileToggle">
+                <span class="menu-icon">☰</span>
+            </button>
+        </div>
+        <div class="mobile-nav-center">
+            <a href="#" class="mobile-logo">
+                <span class="logo-icon">📚</span>
+                TRC20 API
+            </a>
+        </div>
+        <div class="mobile-nav-right">
+            <!-- <button class="search-btn">
+                <span>🔍</span>
+            </button> -->
+        </div>
+    </div>
+
+    <div class="layout">
+        <!-- 遮罩层 -->
+        <div class="overlay" id="overlay" onclick="closeMobileSidebar()"></div>
+
+        <!-- 侧边栏 -->
+        <div class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <a href="#" class="logo">
+                    <span class="logo-icon">📚</span>
+                    TRC20 API
+                </a>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-group">
+                    <div class="nav-group-title">快速导航</div>
+                    <a href="#notice" class="nav-item">
+                        <span class="nav-item-icon">⚠️</span>
+                        重要公告
+                    </a>
+                    <a href="#languages" class="nav-item">
+                        <span class="nav-item-icon">🚀</span>
+                        多语言版本
+                    </a>
+                </div>
+
+                <div class="nav-group">
+                    <div class="nav-group-title">钱包管理</div>
+                    {% for api in apiData.wallet.apis %}
+                    <a href="#wallet_{{ loop.index }}" class="nav-item">
+                        <span class="nav-item-icon">{{ api.icon }}</span>
+                        {{ api.title }}
+                        <span class="nav-item-badge {{ api.method.lower() }}">{{ api.method }}</span>
+                    </a>
+                    {% endfor %}
+                </div>
+
+                <div class="nav-group">
+                    <div class="nav-group-title">余额查询</div>
+                    {% for api in apiData.balance.apis %}
+                    <a href="#balance_{{ loop.index }}" class="nav-item">
+                        <span class="nav-item-icon">{{ api.icon }}</span>
+                        {{ api.title }}
+                        <span class="nav-item-badge {{ api.method.lower() }}">{{ api.method }}</span>
+                    </a>
+                    {% endfor %}
+                </div>
+
+                <div class="nav-group">
+                    <div class="nav-group-title">交易查询</div>
+                    {% for api in apiData.transaction.apis %}
+                    <a href="#transaction_{{ loop.index }}" class="nav-item">
+                        <span class="nav-item-icon">{{ api.icon }}</span>
+                        {{ api.title }}
+                        <span class="nav-item-badge {{ api.method.lower() }}">{{ api.method }}</span>
+                    </a>
+                    {% endfor %}
+                </div>
+
+                <div class="nav-group">
+                    <div class="nav-group-title">转账功能</div>
+                    {% for api in apiData.transfer.apis %}
+                    <a href="#transfer_{{ loop.index }}" class="nav-item">
+                        <span class="nav-item-icon">{{ api.icon }}</span>
+                        {{ api.title }}
+                        <span class="nav-item-badge {{ api.method.lower() }}">{{ api.method }}</span>
+                    </a>
+                    {% endfor %}
+                </div>
+
+                <div class="nav-group">
+                    <div class="nav-group-title">工具接口</div>
+                    {% for api in apiData.tools.apis %}
+                    <a href="#tools_{{ loop.index }}" class="nav-item">
+                        <span class="nav-item-icon">{{ api.icon }}</span>
+                        {{ api.title }}
+                        <span class="nav-item-badge {{ api.method.lower() }}">{{ api.method }}</span>
+                    </a>
+                    {% endfor %}
+                </div>
+
+                <div class="nav-group">
+                    <div class="nav-group-title">区块链查询</div>
+                    {% for api in apiData.blockchain.apis %}
+                    <a href="#blockchain_{{ loop.index }}" class="nav-item">
+                        <span class="nav-item-icon">{{ api.icon }}</span>
+                        {{ api.title }}
+                        <span class="nav-item-badge {{ api.method.lower() }}">{{ api.method }}</span>
+                    </a>
+                    {% endfor %}
+                </div>
+            </nav>
+        </div>
+
+        <!-- 主内容区域 -->
+        <div class="main-content">
+            <!-- 页面头部 -->
+            <div class="content-header">
+                <h1 class="page-title">📚 TRC20 API 3.0</h1>
+                <p class="page-subtitle">专业的TRON区块链接口服务 - 完整API文档 (Python版本)</p>
+            </div>
+
+            <!-- 内容主体 -->
+            <div class="content-body">
+                <!-- 重要公告 -->
+                <section id="notice" class="section">
+                    <div class="notice-section">
+                        <div class="notice-title">⚠️ 重要公告</div>
+                        <p><strong>当前源码全网仅 <a href="https://t.me/king_orz" target="_blank" style="color: white;">https://t.me/king_orz</a> 在维护</strong></p>
+                    </div>
+                </section>
+
+                <!-- 多语言版本介绍 -->
+                <section id="languages" class="section">
+                    <h2 class="section-title">🚀 多语言版本支持</h2>
+
+                    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; border-radius: 12px; margin-bottom: 30px; text-align: center;">
+                        <h3 style="font-size: 1.5rem; margin-bottom: 15px; font-weight: 600;">🎯 企业级多语言解决方案</h3>
+                        <p style="font-size: 1.1rem; opacity: 0.9;">一套API，四种语言实现，满足不同技术栈的开发需求</p>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px;">
+                        <!-- PHP版本 -->
+                        <div style="background: #fff; border: 1px solid #e9ecef; border-radius: 12px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); transition: transform 0.2s ease, box-shadow 0.2s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 10px rgba(0,0,0,0.08)'">
+                            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #777BB4, #4F5B93); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                    <span style="color: white; font-size: 1.5rem; font-weight: bold;">PHP</span>
+                                </div>
+                                <div>
+                                    <h4 style="color: #2c3e50; margin: 0; font-size: 1.2rem;">PHP 版本</h4>
+                                    <p style="color: #6c757d; margin: 0; font-size: 0.9rem;">ThinkPHP 5.0 框架</p>
+                                </div>
+                            </div>
+                            <ul style="color: #495057; font-size: 0.9rem; line-height: 1.6; padding-left: 0; list-style: none;">
+                                <li style="margin-bottom: 8px; padding-left: 20px; position: relative;">
+                                    <span style="position: absolute; left: 0; color: #28a745;">✓</span>
+                                    成熟稳定的Web开发语言
+                                </li>
+                                <li style="margin-bottom: 8px; padding-left: 20px; position: relative;">
+                                    <span style="position: absolute; left: 0; color: #28a745;">✓</span>
+                                    完整的MVC架构设计
+                                </li>
+                                <li style="margin-bottom: 8px; padding-left: 20px; position: relative;">
+                                    <span style="position: absolute; left: 0; color: #28a745;">✓</span>
+                                    丰富的区块链扩展库
+                                </li>
+                                <li style="margin-bottom: 8px; padding-left: 20px; position: relative;">
+                                    <span style="position: absolute; left: 0; color: #28a745;">✓</span>
+                                    部署简单，运维成本低
+                                </li>
+                            </ul>
+                            <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+                                <span style="background: #e3f2fd; color: #1976d2; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">推荐指数: ⭐⭐⭐⭐⭐</span>
+                            </div>
+                        </div>
+
+                        <!-- Go版本 -->
+                        <div style="background: #fff; border: 1px solid #e9ecef; border-radius: 12px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); transition: transform 0.2s ease, box-shadow 0.2s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 10px rgba(0,0,0,0.08)'">
+                            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #00ADD8, #007D9C); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                    <span style="color: white; font-size: 1.3rem; font-weight: bold;">Go</span>
+                                </div>
+                                <div>
+                                    <h4 style="color: #2c3e50; margin: 0; font-size: 1.2rem;">Golang 版本</h4>
+                                    <p style="color: #6c757d; margin: 0; font-size: 0.9rem;">高性能云原生架构</p>
+                                </div>
+                            </div>
+                            <ul style="color: #495057; font-size: 0.9rem; line-height: 1.6; padding-left: 0; list-style: none;">
+                                <li style="margin-bottom: 8px; padding-left: 20px; position: relative;">
+                                    <span style="position: absolute; left: 0; color: #28a745;">✓</span>
+                                    极致的并发处理性能
+                                </li>
+                                <li style="margin-bottom: 8px; padding-left: 20px; position: relative;">
+                                    <span style="position: absolute; left: 0; color: #28a745;">✓</span>
+                                    内存占用低，运行效率高
+                                </li>
+                                <li style="margin-bottom: 8px; padding-left: 20px; position: relative;">
+                                    <span style="position: absolute; left: 0; color: #28a745;">✓</span>
+                                    原生支持Docker容器化
+                                </li>
+                                <li style="margin-bottom: 8px; padding-left: 20px; position: relative;">
+                                    <span style="position: absolute; left: 0; color: #28a745;">✓</span>
+                                    适合高并发场景部署
+                                </li>
+                            </ul>
+                            <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+                                <span style="background: #e8f5e8; color: #2e7d32; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">性能之王: ⚡⚡⚡⚡⚡</span>
+                            </div>
+                        </div>
+
+                        <!-- Python版本 -->
+                        <div style="background: #fff; border: 3px solid #3776ab; border-radius: 12px; padding: 25px; box-shadow: 0 4px 15px rgba(55,118,171,0.2); transition: transform 0.2s ease, box-shadow 0.2s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 30px rgba(55,118,171,0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 15px rgba(55,118,171,0.2)'">
+                            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #3776ab, #ffd343); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                    <span style="color: white; font-size: 1.2rem; font-weight: bold;">🐍</span>
+                                </div>
+                                <div>
+                                    <h4 style="color: #3776ab; margin: 0; font-size: 1.2rem;">Python 版本 ⭐当前版本</h4>
+                                    <p style="color: #6c757d; margin: 0; font-size: 0.9rem;">Flask 轻量级框架</p>
+                                </div>
+                            </div>
+                            <ul style="color: #495057; font-size: 0.9rem; line-height: 1.6; padding-left: 0; list-style: none;">
+                                <li style="margin-bottom: 8px; padding-left: 20px; position: relative;">
+                                    <span style="position: absolute; left: 0; color: #28a745;">✓</span>
+                                    简洁优雅的代码风格
+                                </li>
+                                <li style="margin-bottom: 8px; padding-left: 20px; position: relative;">
+                                    <span style="position: absolute; left: 0; color: #28a745;">✓</span>
+                                    丰富的数据处理库
+                                </li>
+                                <li style="margin-bottom: 8px; padding-left: 20px; position: relative;">
+                                    <span style="position: absolute; left: 0; color: #28a745;">✓</span>
+                                    强大的机器学习生态
+                                </li>
+                                <li style="margin-bottom: 8px; padding-left: 20px; position: relative;">
+                                    <span style="position: absolute; left: 0; color: #28a745;">✓</span>
+                                    快速原型开发首选
+                                </li>
+                            </ul>
+                            <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+                                <span style="background: #fff3e0; color: #f57c00; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">开发效率: 🚀🚀🚀🚀🚀</span>
+                            </div>
+                        </div>
+
+                        <!-- Node.js版本 -->
+                        <div style="background: #fff; border: 1px solid #e9ecef; border-radius: 12px; padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.08); transition: transform 0.2s ease, box-shadow 0.2s ease;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 25px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 10px rgba(0,0,0,0.08)'">
+                            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #68a063, #8cc84b); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-right: 15px;">
+                                    <span style="color: white; font-size: 1.3rem; font-weight: bold;">JS</span>
+                                </div>
+                                <div>
+                                    <h4 style="color: #2c3e50; margin: 0; font-size: 1.2rem;">Node.js 版本</h4>
+                                    <p style="color: #6c757d; margin: 0; font-size: 0.9rem;">Express.js 全栈框架</p>
+                                </div>
+                            </div>
+                            <ul style="color: #495057; font-size: 0.9rem; line-height: 1.6; padding-left: 0; list-style: none;">
+                                <li style="margin-bottom: 8px; padding-left: 20px; position: relative;">
+                                    <span style="position: absolute; left: 0; color: #28a745;">✓</span>
+                                    前后端统一JavaScript语言
+                                </li>
+                                <li style="margin-bottom: 8px; padding-left: 20px; position: relative;">
+                                    <span style="position: absolute; left: 0; color: #28a745;">✓</span>
+                                    异步非阻塞I/O模型
+                                </li>
+                                <li style="margin-bottom: 8px; padding-left: 20px; position: relative;">
+                                    <span style="position: absolute; left: 0; color: #28a745;">✓</span>
+                                    庞大的npm生态系统
+                                </li>
+                                <li style="margin-bottom: 8px; padding-left: 20px; position: relative;">
+                                    <span style="position: absolute; left: 0; color: #28a745;">✓</span>
+                                    实时应用开发利器
+                                </li>
+                            </ul>
+                            <div style="margin-top: 20px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+                                <span style="background: #e8f5e8; color: #388e3c; padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: 600;">全栈首选: 💻💻💻💻💻</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 技术对比表格 -->
+                    <div style="background: #fff; border: 1px solid #e9ecef; border-radius: 12px; padding: 25px; margin-bottom: 30px;">
+                        <h3 style="color: #2c3e50; margin-bottom: 20px; font-size: 1.3rem;">📊 技术特性对比</h3>
+                        <div style="overflow-x: auto;">
+                            <table style="width: 100%; border-collapse: collapse; font-size: 0.9rem;">
+                                <thead>
+                                    <tr style="background: #f8f9fa;">
+                                        <th style="padding: 12px; text-align: left; border-bottom: 2px solid #dee2e6; color: #495057; font-weight: 600;">特性</th>
+                                        <th style="padding: 12px; text-align: center; border-bottom: 2px solid #dee2e6; color: #495057; font-weight: 600;">PHP</th>
+                                        <th style="padding: 12px; text-align: center; border-bottom: 2px solid #dee2e6; color: #495057; font-weight: 600;">Golang</th>
+                                        <th style="padding: 12px; text-align: center; border-bottom: 2px solid #dee2e6; color: #3776ab; font-weight: 600;">Python ⭐</th>
+                                        <th style="padding: 12px; text-align: center; border-bottom: 2px solid #dee2e6; color: #495057; font-weight: 600;">Node.js</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td style="padding: 10px; border-bottom: 1px solid #dee2e6; font-weight: 500;">开发效率</td>
+                                        <td style="padding: 10px; text-align: center; border-bottom: 1px solid #dee2e6;">⭐⭐⭐⭐⭐</td>
+                                        <td style="padding: 10px; text-align: center; border-bottom: 1px solid #dee2e6;">⭐⭐⭐⭐</td>
+                                        <td style="padding: 10px; text-align: center; border-bottom: 1px solid #dee2e6; background: #f0f9ff;">⭐⭐⭐⭐⭐</td>
+                                        <td style="padding: 10px; text-align: center; border-bottom: 1px solid #dee2e6;">⭐⭐⭐⭐⭐</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 10px; border-bottom: 1px solid #dee2e6; font-weight: 500;">运行性能</td>
+                                        <td style="padding: 10px; text-align: center; border-bottom: 1px solid #dee2e6;">⭐⭐⭐</td>
+                                        <td style="padding: 10px; text-align: center; border-bottom: 1px solid #dee2e6;">⭐⭐⭐⭐⭐</td>
+                                        <td style="padding: 10px; text-align: center; border-bottom: 1px solid #dee2e6; background: #f0f9ff;">⭐⭐⭐</td>
+                                        <td style="padding: 10px; text-align: center; border-bottom: 1px solid #dee2e6;">⭐⭐⭐⭐</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 10px; border-bottom: 1px solid #dee2e6; font-weight: 500;">部署难度</td>
+                                        <td style="padding: 10px; text-align: center; border-bottom: 1px solid #dee2e6;">⭐⭐⭐⭐⭐</td>
+                                        <td style="padding: 10px; text-align: center; border-bottom: 1px solid #dee2e6;">⭐⭐⭐⭐</td>
+                                        <td style="padding: 10px; text-align: center; border-bottom: 1px solid #dee2e6; background: #f0f9ff;">⭐⭐⭐⭐</td>
+                                        <td style="padding: 10px; text-align: center; border-bottom: 1px solid #dee2e6;">⭐⭐⭐⭐</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 10px; border-bottom: 1px solid #dee2e6; font-weight: 500;">并发处理</td>
+                                        <td style="padding: 10px; text-align: center; border-bottom: 1px solid #dee2e6;">⭐⭐⭐</td>
+                                        <td style="padding: 10px; text-align: center; border-bottom: 1px solid #dee2e6;">⭐⭐⭐⭐⭐</td>
+                                        <td style="padding: 10px; text-align: center; border-bottom: 1px solid #dee2e6; background: #f0f9ff;">⭐⭐⭐</td>
+                                        <td style="padding: 10px; text-align: center; border-bottom: 1px solid #dee2e6;">⭐⭐⭐⭐</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 10px; border-bottom: 1px solid #dee2e6; font-weight: 500;">生态丰富度</td>
+                                        <td style="padding: 10px; text-align: center; border-bottom: 1px solid #dee2e6;">⭐⭐⭐⭐⭐</td>
+                                        <td style="padding: 10px; text-align: center; border-bottom: 1px solid #dee2e6;">⭐⭐⭐⭐</td>
+                                        <td style="padding: 10px; text-align: center; border-bottom: 1px solid #dee2e6; background: #f0f9ff;">⭐⭐⭐⭐⭐</td>
+                                        <td style="padding: 10px; text-align: center; border-bottom: 1px solid #dee2e6;">⭐⭐⭐⭐⭐</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- 使用场景推荐 -->
+                    <div style="background: #fff; border: 1px solid #e9ecef; border-radius: 12px; padding: 25px;">
+                        <h3 style="color: #2c3e50; margin-bottom: 20px; font-size: 1.3rem;">🎯 使用场景推荐</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                            <div style="padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #777BB4;">
+                                <h4 style="color: #777BB4; margin: 0 0 10px 0; font-size: 1.1rem;">🔧 PHP 版本适合</h4>
+                                <ul style="margin: 0; padding-left: 20px; color: #495057; font-size: 0.9rem;">
+                                    <li>传统Web应用开发</li>
+                                    <li>快速原型验证</li>
+                                    <li>中小型项目部署</li>
+                                    <li>成本敏感的项目</li>
+                                </ul>
+                            </div>
+                            <div style="padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #00ADD8;">
+                                <h4 style="color: #00ADD8; margin: 0 0 10px 0; font-size: 1.1rem;">⚡ Golang 版本适合</h4>
+                                <ul style="margin: 0; padding-left: 20px; color: #495057; font-size: 0.9rem;">
+                                    <li>高并发交易系统</li>
+                                    <li>微服务架构</li>
+                                    <li>云原生部署</li>
+                                    <li>性能要求极高的场景</li>
+                                </ul>
+                            </div>
+                            <div style="padding: 20px; background: #f0f9ff; border-radius: 8px; border-left: 4px solid #3776ab; border: 2px solid #3776ab;">
+                                <h4 style="color: #3776ab; margin: 0 0 10px 0; font-size: 1.1rem;">🐍 Python 版本适合 ⭐当前版本</h4>
+                                <ul style="margin: 0; padding-left: 20px; color: #495057; font-size: 0.9rem;">
+                                    <li>数据分析和处理</li>
+                                    <li>AI/ML集成应用</li>
+                                    <li>科研和教育项目</li>
+                                    <li>快速迭代开发</li>
+                                </ul>
+                            </div>
+                            <div style="padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #68a063;">
+                                <h4 style="color: #68a063; margin: 0 0 10px 0; font-size: 1.1rem;">🌐 Node.js 版本适合</h4>
+                                <ul style="margin: 0; padding-left: 20px; color: #495057; font-size: 0.9rem;">
+                                    <li>实时交易应用</li>
+                                    <li>全栈JavaScript项目</li>
+                                    <li>API网关服务</li>
+                                    <li>前后端一体化开发</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="success-box" style="margin-top: 30px;">
+                        <h3>🎉 一次购买，四种语言，无限可能！</h3>
+                        <p>无论您的团队使用什么技术栈，我们都为您准备了最适合的解决方案。每个版本都经过精心优化，确保在对应语言生态中发挥最佳性能。</p>
+                        <p><strong>💎 专业提示：</strong>建议根据项目规模和性能要求选择合适的版本。小型项目推荐PHP，高并发推荐Golang，数据处理推荐Python，全栈开发推荐Node.js。</p>
+                    </div>
+                </section>
+
+                <!-- 钱包管理接口 -->
+                <section id="wallet" class="section">
+                    <h2 class="section-title">{{ apiData.wallet.title }}</h2>
+                    {% for api in apiData.wallet.apis %}
+                    <div class="api-item" id="wallet_{{ loop.index }}">
+                        <div class="api-header">
+                            <div class="api-title">
+                                <span class="api-method {{ api.method }}">{{ api.method }}</span>
+                                {{ api.icon }} {{ api.title }}
+                            </div>
+                            <div class="api-url">{{ api.url }}</div>
+                            <div class="api-description">{{ api.description }}</div>
+                        </div>
+
+                        <div class="api-content">
+                            {% if api.params %}
+                            <div class="params-section">
+                                <div class="params-title">请求参数</div>
+                                <table class="params-table">
+                                    <thead>
+                                        <tr>
+                                            <th>参数名</th>
+                                            <th>类型</th>
+                                            <th>必填</th>
+                                            <th>说明</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for param in api.params %}
+                                        <tr>
+                                            <td>{{ param.name }}</td>
+                                            <td>{{ param.type }}</td>
+                                            <td>{{ param.required }}</td>
+                                            <td>{{ param.desc }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endif %}
+
+                            <div class="example-section">
+                                <div class="example-title">返回示例</div>
+                                <div class="code-block">{
+    "code": 1,
+    "msg": "success",
+    "data": {
+        "address": "TTAUj1qkSVK2LuZBResGu2xXb1ZAguGsnu",
+        "privateKey": "7a0a01c930a4d3c83bad9e8493bdec2fccfaf070532f8b67d6b82f76175acf12",
+        "publicKey": "0441bc9bd6d0db7bf6e20874459c7481d00d3825117f234567890abcdef"{% if api.title == '生成带助记词的钱包地址' %},
+        "mnemonic": "leg open globe profit orchard economy spider inside rabbit vocal spell build"{% endif %}
+    },
+    "time": 1756395183
+}</div>
+                                {% if api.testUrl %}
+                                <a href="{{ api.testUrl }}" target="_blank" class="test-button">在线测试</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </section>
+
+                <!-- 余额查询接口 -->
+                <section id="balance" class="section">
+                    <h2 class="section-title">{{ apiData.balance.title }}</h2>
+                    {% for api in apiData.balance.apis %}
+                    <div class="api-item" id="balance_{{ loop.index }}">
+                        <div class="api-header">
+                            <div class="api-title">
+                                <span class="api-method {{ api.method }}">{{ api.method }}</span>
+                                {{ api.icon }} {{ api.title }}
+                            </div>
+                            <div class="api-url">{{ api.url }}</div>
+                            <div class="api-description">{{ api.description }}</div>
+                        </div>
+
+                        <div class="api-content">
+                            {% if api.params %}
+                            <div class="params-section">
+                                <div class="params-title">请求参数</div>
+                                <table class="params-table">
+                                    <thead>
+                                        <tr>
+                                            <th>参数名</th>
+                                            <th>类型</th>
+                                            <th>必填</th>
+                                            <th>说明</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for param in api.params %}
+                                        <tr>
+                                            <td>{{ param.name }}</td>
+                                            <td>{{ param.type }}</td>
+                                            <td>{{ param.required }}</td>
+                                            <td>{{ param.desc }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endif %}
+
+                            <div class="example-section">
+                                <div class="example-title">返回示例</div>
+                                <div class="code-block">{
+    "code": 1,
+    "msg": "success",
+    "data": {
+        {% if 'TRX' in api.title %}        "balance": "1500.250000",
+        "address": "TTAUj1qkSVK2LuZBResGu2xXb1ZAguGsnu"{% elif 'TRC20' in api.title %}        "balance": "100.500000",
+        "decimals": 6,
+        "symbol": "USDT",
+        "address": "TTAUj1qkSVK2LuZBResGu2xXb1ZAguGsnu"{% else %}        "balance": "100.500000",
+        "tokenInfo": {
+            "id": "1002992",
+            "name": "BTT",
+            "abbr": "BTT",
+            "precision": 6
+        }{% endif %}
+    },
+    "time": 1756395183
+}</div>
+                                {% if api.testUrl %}
+                                <a href="{{ api.testUrl }}" target="_blank" class="test-button">在线测试</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </section>
+
+                <!-- 转账功能接口 -->
+                <section id="transfer" class="section">
+                    <h2 class="section-title">{{ apiData.transfer.title }}</h2>
+                    {% for api in apiData.transfer.apis %}
+                    <div class="api-item" id="transfer_{{ loop.index }}">
+                        <div class="api-header">
+                            <div class="api-title">
+                                <span class="api-method {{ api.method }}">{{ api.method }}</span>
+                                {{ api.icon }} {{ api.title }}
+                            </div>
+                            <div class="api-url">{{ api.url }}</div>
+                            <div class="api-description">{{ api.description }}</div>
+                        </div>
+
+                        <div class="api-content">
+                            {% if api.params %}
+                            <div class="params-section">
+                                <div class="params-title">请求参数</div>
+                                <table class="params-table">
+                                    <thead>
+                                        <tr>
+                                            <th>参数名</th>
+                                            <th>类型</th>
+                                            <th>必填</th>
+                                            <th>说明</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for param in api.params %}
+                                        <tr>
+                                            <td>{{ param.name }}</td>
+                                            <td>{{ param.type }}</td>
+                                            <td>{{ param.required }}</td>
+                                            <td>{{ param.desc }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endif %}
+
+                            <div class="example-section">
+                                <div class="example-title">返回示例</div>
+                                <div class="code-block">{
+    "code": 1,
+    "msg": "Transaction successful",
+    "data": {
+        "txid": "6518e7a20dd174a4cac3465b3fd3a4414688efa67a635669ed7b2c5eea0bb0f6",
+        "result": true,
+        "transaction": {
+            "visible": false,
+            "txID": "6518e7a20dd174a4cac3465b3fd3a4414688efa67a635669ed7b2c5eea0bb0f6",
+            "raw_data": "...",
+            "raw_data_hex": "..."
+        }
+    },
+    "time": 1756395183
+}</div>
+                                <div class="warning-box">
+                                    <strong>⚠️ 安全提醒：</strong>转账操作不可逆，请确保接收地址正确！转账前请先小额测试。
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </section>
+
+                <!-- 交易查询接口 -->
+                <section id="transaction" class="section">
+                    <h2 class="section-title">{{ apiData.transaction.title }}</h2>
+                    {% for api in apiData.transaction.apis %}
+                    <div class="api-item" id="transaction_{{ loop.index }}">
+                        <div class="api-header">
+                            <div class="api-title">
+                                <span class="api-method {{ api.method }}">{{ api.method }}</span>
+                                {{ api.icon }} {{ api.title }}
+                            </div>
+                            <div class="api-url">{{ api.url }}</div>
+                            <div class="api-description">{{ api.description }}</div>
+                        </div>
+
+                        <div class="api-content">
+                            {% if api.params %}
+                            <div class="params-section">
+                                <div class="params-title">请求参数</div>
+                                <table class="params-table">
+                                    <thead>
+                                        <tr>
+                                            <th>参数名</th>
+                                            <th>类型</th>
+                                            <th>必填</th>
+                                            <th>说明</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for param in api.params %}
+                                        <tr>
+                                            <td>{{ param.name }}</td>
+                                            <td>{{ param.type }}</td>
+                                            <td>{{ param.required }}</td>
+                                            <td>{{ param.desc }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endif %}
+
+                            <div class="example-section">
+                                <div class="example-title">返回示例</div>
+                                <div class="code-block">{
+    "code": 1,
+    "msg": "success",
+    "data": {
+        "txID": "6518e7a20dd174a4cac3465b3fd3a4414688efa67a635669ed7b2c5eea0bb0f6",
+        "blockNumber": 45123456,
+        "blockTimeStamp": 1756395183000,
+        "contractResult": [""],
+        "receipt": {
+            "energy_usage": 0,
+            "energy_fee": 0,
+            "origin_energy_usage": 0,
+            "energy_usage_total": 14572,
+            "net_usage": 268,
+            "net_fee": 0,
+            "result": "SUCCESS"
+        }
+    },
+    "time": 1756395183
+}</div>
+                                {% if api.testUrl %}
+                                <a href="{{ api.testUrl }}" target="_blank" class="test-button">在线测试</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </section>
+
+                <!-- 区块链查询接口 -->
+                <section id="blockchain" class="section">
+                    <h2 class="section-title">{{ apiData.blockchain.title }}</h2>
+                    {% for api in apiData.blockchain.apis %}
+                    <div class="api-item" id="blockchain_{{ loop.index }}">
+                        <div class="api-header">
+                            <div class="api-title">
+                                <span class="api-method {{ api.method }}">{{ api.method }}</span>
+                                {{ api.icon }} {{ api.title }}
+                            </div>
+                            <div class="api-url">{{ api.url }}</div>
+                            <div class="api-description">{{ api.description }}</div>
+                        </div>
+
+                        <div class="api-content">
+                            {% if api.params %}
+                            <div class="params-section">
+                                <div class="params-title">请求参数</div>
+                                <table class="params-table">
+                                    <thead>
+                                        <tr>
+                                            <th>参数名</th>
+                                            <th>类型</th>
+                                            <th>必填</th>
+                                            <th>说明</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for param in api.params %}
+                                        <tr>
+                                            <td>{{ param.name }}</td>
+                                            <td>{{ param.type }}</td>
+                                            <td>{{ param.required }}</td>
+                                            <td>{{ param.desc }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endif %}
+
+                            <div class="example-section">
+                                <div class="example-title">返回示例</div>
+                                <div class="code-block">{
+    "code": 1,
+    "msg": "success",
+    "data": {% if '获取区块高度' in api.title %}{
+        "blockHeight": 45123456,
+        "timestamp": 1756395183
+    }{% else %}{
+        "blockID": "0000000000bc614e1234567890abcdef12345678...",
+        "block_header": {
+            "raw_data": {
+                "number": 45123456,
+                "txTrieRoot": "...",
+                "witness_address": "...",
+                "parentHash": "...",
+                "version": 22,
+                "timestamp": 1756395183000
+            }
+        },
+        "transactions": [...]
+    }{% endif %},
+    "time": 1756395183
+}</div>
+                                {% if api.testUrl %}
+                                <a href="{{ api.testUrl }}" target="_blank" class="test-button">在线测试</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </section>
+
+                <!-- 工具接口 -->
+                <section id="tools" class="section">
+                    <h2 class="section-title">{{ apiData.tools.title }}</h2>
+                    {% for api in apiData.tools.apis %}
+                    <div class="api-item" id="tools_{{ loop.index }}">
+                        <div class="api-header">
+                            <div class="api-title">
+                                <span class="api-method {{ api.method }}">{{ api.method }}</span>
+                                {{ api.icon }} {{ api.title }}
+                            </div>
+                            <div class="api-url">{{ api.url }}</div>
+                            <div class="api-description">{{ api.description }}</div>
+                        </div>
+
+                        <div class="api-content">
+                            {% if api.params %}
+                            <div class="params-section">
+                                <div class="params-title">请求参数</div>
+                                <table class="params-table">
+                                    <thead>
+                                        <tr>
+                                            <th>参数名</th>
+                                            <th>类型</th>
+                                            <th>必填</th>
+                                            <th>说明</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for param in api.params %}
+                                        <tr>
+                                            <td>{{ param.name }}</td>
+                                            <td>{{ param.type }}</td>
+                                            <td>{{ param.required }}</td>
+                                            <td>{{ param.desc }}</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                            {% endif %}
+
+                            <div class="example-section">
+                                <div class="example-title">返回示例</div>
+                                <div class="code-block">{
+    "code": 1,
+    "msg": {% if 'status' in api.title %}"TRON API服务运行正常",
+    "data": {
+        "version": "3.0",
+        "python_version": "3.13.5",
+        "timestamp": 1756395183,
+        "date": "2025-08-09 01:16:53"
+    }{% else %}"接口列表获取成功",
+    "data": {
+        "地址生成": {
+            "createAddress": "生成TRON地址",
+            "generateAddressWithMnemonic": "通过助记词生成地址"
+        },
+        "余额查询": {
+            "getTrxBalance": "查询TRX余额",
+            "getTrc20Balance": "查询TRC20代币余额"
+        }
+    }{% endif %},
+    "time": 1756395183
+}</div>
+                                {% if api.testUrl %}
+                                <a href="{{ api.testUrl }}" target="_blank" class="test-button">在线测试</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </section>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 移动端侧边栏切换
+        function toggleMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            const mobileToggle = document.getElementById('mobileToggle');
+
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('show');
+
+            // 切换图标
+            const icon = mobileToggle.querySelector('.menu-icon');
+            if (sidebar.classList.contains('open')) {
+                icon.textContent = '✕';
+            } else {
+                icon.textContent = '☰';
+            }
+        }
+
+        function closeMobileSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            const mobileToggle = document.getElementById('mobileToggle');
+
+            sidebar.classList.remove('open');
+            overlay.classList.remove('show');
+
+            // 重置图标
+            const icon = mobileToggle.querySelector('.menu-icon');
+            icon.textContent = '☰';
+        }
+
+        // 侧边栏导航高亮
+        function updateActiveNav() {
+            const sections = document.querySelectorAll('section[id]');
+            const navItems = document.querySelectorAll('.nav-item');
+
+            let current = '';
+
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (window.pageYOffset >= (sectionTop - 100)) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navItems.forEach(item => {
+                item.classList.remove('active');
+                if (item.getAttribute('href') === '#' + current) {
+                    item.classList.add('active');
+                }
+            });
+        }
+
+        // 滚动监听
+        window.addEventListener('scroll', updateActiveNav);
+
+        // 页面加载完成后初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            updateActiveNav();
+
+            // 点击导航链接平滑滚动
+            document.querySelectorAll('.nav-item[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+
+                        // 移动端点击导航后关闭侧边栏
+                        if (window.innerWidth <= 1024) {
+                            closeMobileSidebar();
+                        }
+                    }
+                });
+            });
+        });
+
+        // 复制代码功能
+        function copyCode(element) {
+            const code = element.textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                // 可以添加复制成功的提示
+                const originalText = element.textContent;
+                element.textContent = '已复制！';
+                setTimeout(() => {
+                    element.textContent = originalText;
+                }, 2000);
+            });
+        }
+
+        // 为代码块添加复制按钮
+        document.addEventListener('DOMContentLoaded', function() {
+            const codeBlocks = document.querySelectorAll('.code-block');
+            codeBlocks.forEach(block => {
+                block.style.position = 'relative';
+                block.style.cursor = 'pointer';
+                block.title = '点击复制代码';
+                block.addEventListener('click', function() {
+                    copyCode(this);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
