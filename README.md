@@ -97,6 +97,8 @@ python main.py
 - API 文档：http://localhost:8765/doc
 - API 状态：http://localhost:8765/v1/status
 
+> 💡 **提示**: 部署成功后，别忘了加入我们的 [Telegram 频道](https://t.me/fpusdt) 和 [交流群组](https://t.me/fpusdtcom) 获取最新资讯！
+
 5. **测试 API**
 
 ```bash
@@ -260,13 +262,28 @@ python/
 
 ## 📞 联系方式
 
-- **Telegram**: https://t.me/king_orz
-- **官网**: https://www.919968.xyz/
+### 🔔 Telegram 社区
+
+- **📢 官方频道**: [https://t.me/fpusdt](https://t.me/fpusdt) - 获取最新更新、版本发布信息
+- **💬 交流群组**: [https://t.me/fpusdtcom](https://t.me/fpusdtcom) - 技术讨论、问题解答、经验分享
+
+### 💼 技术支持
+
+- **技术支持**: [https://t.me/king_orz](https://t.me/king_orz) - 专业技术支持和定制开发
+- **官方网站**: [https://www.919968.xyz/](https://www.919968.xyz/)
 
 ## 📄 开源协议
 
 本项目采用 MIT 开源协议。
 
 ---
+
+## 🌟 社区支持
+
+加入我们的 Telegram 社区，获取最新资讯和技术支持：
+
+- **📢 [官方频道](https://t.me/fpusdt)** - 版本更新、重要公告
+- **💬 [交流群组](https://t.me/fpusdtcom)** - 技术讨论、问题解答
+- **👨‍💼 [技术支持](https://t.me/king_orz)** - 专业技术支持
 
 **温馨提示**：接受各种代码定制服务 | © 2025
